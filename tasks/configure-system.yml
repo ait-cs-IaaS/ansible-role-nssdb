@@ -12,6 +12,7 @@
   when: nssdb_exists.rc != 0
 
 - name: Create system-wide {{ nssdb_system_path }} folder
+  become: true
   file:
     path: '{{ nssdb_system_path }}'
     state: directory
@@ -19,10 +20,12 @@
   when: nssdb_stat is defined and nssdb_stat.stat is defined and nssdb_stat.stat.exists == false
 
 - name: Initialize db in system-wide {{ nssdb_system_path }}
+  become: true
   command: certutil -N -d sql:{{ nssdb_system_path }} --empty-password
-  when: nssdb_folder_created|changed
+  when: nssdb_folder_created.changed
 
 - name: Install certificates to system-wide {{ nssdb_system_path }}
+  become: true
   command: >
     certutil -A -d 'sql:{{ nssdb_system_path }}'
     -n '{{ item.name }}'
