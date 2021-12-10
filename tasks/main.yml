@@ -16,13 +16,11 @@
 # Setup/install tasks.
 - include: setup-Debian.yml
   when: ansible_os_family == 'Debian'
-  static: no
 
 # Configure certs.
 - include: configure-system.yml
-  static: no
 - include: configure-users.yml
   with_items: '{{ nssdb_users }}'
   loop_control:
       loop_var: nssdb_user
-  static: no
+
